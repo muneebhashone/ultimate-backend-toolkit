@@ -1,5 +1,5 @@
 import argon2 from "argon2";
-import { sign, verify } from "jsonwebtoken";
+import { sign, SignOptions, verify } from "jsonwebtoken";
 import { IUser } from "../types";
 import { jwtConfig } from "../core/config";
 
@@ -14,8 +14,11 @@ export const verifyPassword = async (
   return argon2.verify(hashedPassword, password);
 };
 
-export const signJwt = async (payload: Partial<IUser>): Promise<string> => {
-  return sign(payload, jwtConfig.JWT_SECRET);
+export const signJwt = async (
+  payload: Partial<IUser>,
+  options?: SignOptions
+): Promise<string> => {
+  return sign(payload, jwtConfig.JWT_SECRET, options);
 };
 
 export const verifyJwt = async (jwt: string): Promise<Partial<IUser>> => {

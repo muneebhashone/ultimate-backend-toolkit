@@ -17,3 +17,9 @@ export const createUser = async (payload: ICreateUser): Promise<IUser> => {
 
   return user.toObject();
 };
+
+export const fetchUsers = async (): Promise<IUser[]> => {
+  const users = await User.find({});
+
+  return users;
+};
