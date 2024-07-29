@@ -1,6 +1,7 @@
 import Fastify, { FastifyInstance } from "fastify";
 import mercurius from "mercurius";
-import schema from "../schema";
+import cors from "@fastify/cors";
+import schema from "../graphqlSchema";
 
 const app: FastifyInstance = Fastify({
   logger: {
@@ -17,6 +18,12 @@ const app: FastifyInstance = Fastify({
 app.register(mercurius, {
   schema: schema,
   graphiql: true,
+});
+
+app.register(cors, {
+  delegator: (_, callback) => {
+    callback(null, { origin: ["https://studio.apollographql.com"] });
+  },
 });
 
 export default app;

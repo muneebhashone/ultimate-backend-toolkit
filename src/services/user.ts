@@ -23,3 +23,13 @@ export const fetchUsers = async (): Promise<IUser[]> => {
 
   return users;
 };
+
+export const fetchUser = async (userId: string): Promise<IUser> => {
+  const user = await User.findOne({ _id: userId });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user?.toObject();
+};

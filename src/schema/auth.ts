@@ -1,6 +1,4 @@
-import { GraphQLError } from "graphql";
 import { builder } from "../builder";
-import { loginUser } from "../services/auth";
 import { LoginUser, LoginUserReturn } from "../types";
 
 export const LoginUserReturnRef =
@@ -22,19 +20,3 @@ LoginUserInputRef.implement({
     rememberMe: t.boolean({ required: true }),
   }),
 });
-
-builder.mutationField("loginUser", (t) =>
-  t.field({
-    type: LoginUserReturnRef,
-    args: {
-      input: t.arg({ type: LoginUserInputRef, required: true }),
-    },
-    resolve: async (_, { input }) => {
-      try {
-        return loginUser(input);
-      } catch (err) {
-        throw new GraphQLError((err as Error).message);
-      }
-    },
-  })
-);

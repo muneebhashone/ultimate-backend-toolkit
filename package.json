@@ -29,6 +29,7 @@
     "typescript-eslint": "^7.17.0"
   },
   "dependencies": {
+    "@fastify/cors": "^9.0.1",
     "@pothos/core": "^4.0.2",
     "@react-email/components": "0.0.22",
     "argon2": "^0.40.3",
