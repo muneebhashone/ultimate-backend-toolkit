@@ -1,9 +1,9 @@
 import mongoose, { Document, Schema } from "mongoose";
-import { IUser } from "../types";
+import { IUser } from "../../types";
 
 export interface IUserDocument extends Document<IUser> {}
 
-const UserSchema: Schema = new Schema<IUser>(
+const UserSchema = new Schema<IUser>(
   {
     username: {
       type: String,

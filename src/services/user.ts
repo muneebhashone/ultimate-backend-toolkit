@@ -1,9 +1,13 @@
-import User from "../models/user";
+import { eq } from "drizzle-orm";
+import { db } from "../lib/drizzle";
+import { users } from "../models/drizzle";
 import { ICreateUser, IUser } from "../types";
 import { hashPassword } from "../utils/security";
 
 export const createUser = async (payload: ICreateUser): Promise<IUser> => {
-  const userExist = await User.findOne({ email: payload.email });
+  const userExist = await db.query.users.findFirst({
+    where: eq(users.email, payload.email),
+  });
 
   if (userExist) {
     throw new Error("User with same email address already exist");
@@ -11,25 +15,41 @@ export const createUser = async (payload: ICreateUser): Promise<IUser> => {
 
   const password = await hashPassword(payload.password);
 
-  const user = new User({ ...payload, password: password });
+  const user = await db
+    .insert(users)
+    .values({ ...payload, password: password, status: "APPROVED" })
+    .returning()
+    .execute();
 
-  await user.save();
-
-  return user.toObject();
+  return user[0];
 };
 
 export const fetchUsers = async (): Promise<IUser[]> => {
-  const users = await User.find({});
+  const users = await db.query.users.findMany();
 
   return users;
 };
 
 export const fetchUser = async (userId: string): Promise<IUser> => {
-  const user = await User.findOne({ _id: userId });
+  const user = await db.query.users.findFirst({
+    where: eq(users.id, Number(userId)),
+  });
 
   if (!user) {
     throw new Error("User not found");
   }
 
-  return user?.toObject();
+  return user;
+};
+
+export const findUserByEmail = async (email: string): Promise<IUser> => {
+  const user = await db.query.users.findFirst({
+    where: eq(users.email, email),
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user;
 };

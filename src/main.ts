@@ -1,10 +1,12 @@
 import app from "./core/app";
 import config from "./core/config";
-import { connectDatabase } from "./lib/database";
+import { mongodbConnection as connectMongoDb } from "./lib/mongodb";
+import { pingRedis } from "./lib/redis";
 
 const start = async () => {
   try {
-    await connectDatabase();
+    await connectMongoDb();
+    await pingRedis();
 
     await app.listen({ port: config.PORT });
 

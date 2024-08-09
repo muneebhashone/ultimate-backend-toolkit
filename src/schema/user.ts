@@ -6,11 +6,11 @@ export const CreateUserInputRef = builder.inputRef<ICreateUser>("CreateUser");
 
 UserRef.implement({
   fields: (t) => ({
-    id: t.exposeString("_id"),
+    id: t.exposeInt("id"),
     username: t.exposeString("username"),
     email: t.exposeString("email"),
-    createdAt: t.field({ type: "Date", resolve: (parent) => parent.createdAt }),
-    updatedAt: t.field({ type: "Date", resolve: (parent) => parent.updatedAt }),
+    createdAt: t.exposeString("createdAt"),
+    updatedAt: t.exposeString("updatedAt"),
   }),
 });
 

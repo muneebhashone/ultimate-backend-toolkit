@@ -1,11 +1,11 @@
-import User from "../models/user";
 import { LoginUser, LoginUserReturn } from "../types";
 import { signJwt, verifyPassword } from "../utils/security";
+import { findUserByEmail } from "./user";
 
 export const loginUser = async (
   payload: LoginUser
 ): Promise<LoginUserReturn> => {
-  const user = await User.findOne({ email: payload.email });
+  const user = await findUserByEmail(payload.email);
 
   if (!user) {
     throw new Error("Invalid credentials");
@@ -17,7 +17,7 @@ export const loginUser = async (
 
   const accessToken = await signJwt(
     {
-      _id: user.id,
+      id: user.id,
       email: user.email,
       username: user.username,
     },
@@ -26,7 +26,7 @@ export const loginUser = async (
 
   const refreshToken = await signJwt(
     {
-      _id: user.id,
+      id: user.id,
     },
     { expiresIn: payload.rememberMe ? "45d" : "7d" }
   );

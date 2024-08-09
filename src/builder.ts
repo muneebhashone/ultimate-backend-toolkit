@@ -8,11 +8,11 @@ import {
 export const builder = new SchemaBuilder<{
   Scalars: {
     DateTime: {
-      Input: Date;
+      Input: string;
       Output: Date;
     };
     Date: {
-      Input: Date;
+      Input: string;
       Output: Date;
     };
     Email: {

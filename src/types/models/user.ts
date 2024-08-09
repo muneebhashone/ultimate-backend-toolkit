@@ -1,8 +1,4 @@
-export interface IUser {
-  _id: string;
-  username: string;
-  email: string;
-  password: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { InferSelectModel } from "drizzle-orm";
+import { users } from "../../models/drizzle";
+
+export interface IUser extends InferSelectModel<typeof users> {}

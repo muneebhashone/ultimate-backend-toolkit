@@ -1,7 +1,9 @@
 import { z } from "zod";
 
 const configSchema = z.object({
-  DATABASE_URL: z.string().url(),
+  MONGO_DATABASE_URL: z.string().url(),
+  POSTGRES_DATABASE_URL: z.string().url(),
+  REDIS_URL: z.string().url(),
   PORT: z.string().default("3000").transform(Number),
 });
 

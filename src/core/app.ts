@@ -7,6 +7,7 @@ const app: FastifyInstance = Fastify({
   logger: {
     transport: {
       target: "pino-pretty",
+      level: "info",
       options: {
         translateTime: "HH:MM:ss Z",
         ignore: "pid,hostname",
