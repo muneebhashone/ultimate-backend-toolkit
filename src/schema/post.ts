@@ -1,8 +1,14 @@
+import { InferSelectModel } from "drizzle-orm";
 import { builder } from "../builder";
-import { IPost } from "../types";
-import { Category } from "./category";
+import { Category, ICategory } from "./category";
 import { StatusGraphQLEnum } from "./enums";
-import { User } from "./user";
+import { IUser, User } from "./user";
+import { posts } from "../models/drizzle/schema";
+
+export interface IPost extends InferSelectModel<typeof posts> {
+  user: IUser;
+  categories: ICategory[];
+}
 
 export const Post = builder.objectRef<IPost>("Post").implement({
   fields: (t) => ({

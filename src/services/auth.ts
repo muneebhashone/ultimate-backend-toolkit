@@ -1,5 +1,4 @@
-import { ILoginUserInput } from "../schema";
-import { ILoginUserReturn } from "../types";
+import { ILoginUserInput, ILoginUserReturn } from "../schema";
 import { signJwt, verifyPassword } from "../utils/security";
 import { findUserByEmail } from "./user";
 

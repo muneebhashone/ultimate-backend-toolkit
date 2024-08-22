@@ -1,5 +1,8 @@
+import { InferSelectModel } from "drizzle-orm";
 import { builder } from "../builder";
-import { IUser } from "../types";
+import { users } from "../models/drizzle/schema";
+
+export interface IUser extends InferSelectModel<typeof users> {}
 
 export const User = builder.objectRef<IUser>("User").implement({
   fields: (t) => ({

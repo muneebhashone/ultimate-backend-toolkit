@@ -11,7 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { pgEnum } from "drizzle-orm/pg-core";
-import { permissionEnums, rolesEnums, statusEnums } from "../../enums";
+import { permissionEnums, rolesEnums, statusEnums } from "../../schema/enums";
 
 export const rolePgEnum = pgEnum("ROLE", rolesEnums);
 export const statusPgEnum = pgEnum("USER_STATUS", statusEnums);

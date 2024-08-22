@@ -1,5 +1,8 @@
+import { InferSelectModel } from "drizzle-orm";
 import { builder } from "../builder";
-import { ICategory } from "../types";
+import { categories } from "../models/drizzle/schema";
+
+export interface ICategory extends InferSelectModel<typeof categories> {}
 
 export const Category = builder.objectRef<ICategory>("Category").implement({
   fields: (t) => ({

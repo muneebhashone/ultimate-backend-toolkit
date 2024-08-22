@@ -1,9 +1,8 @@
 import { eq } from "drizzle-orm";
 import { db } from "../lib/drizzle";
 import { users } from "../models/drizzle/schema";
-import { IUser } from "../types";
 import { hashPassword } from "../utils/security";
-import { ICreateUserInput } from "../schema";
+import { ICreateUserInput, IUser } from "../schema";
 
 export const createUser = async (payload: ICreateUserInput): Promise<IUser> => {
   const userExist = await db.query.users.findFirst({

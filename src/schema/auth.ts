@@ -1,5 +1,9 @@
 import { builder } from "../builder";
-import { ILoginUserReturn } from "../types";
+
+export interface ILoginUserReturn {
+  accessToken: string;
+  refreshToken: string;
+}
 
 export const LoginUserReturn = builder
   .objectRef<ILoginUserReturn>("LoginUserReturn")
