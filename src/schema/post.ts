@@ -1,13 +1,10 @@
 import { builder } from "../builder";
-import { IPost, ICreatePost } from "../types";
-import { CategoryRef } from "./category";
+import { IPost } from "../types";
+import { Category } from "./category";
 import { StatusGraphQLEnum } from "./enums";
-import { UserRef } from "./user";
+import { User } from "./user";
 
-export const PostRef = builder.objectRef<IPost>("Post");
-export const CreatePostInputRef = builder.inputRef<ICreatePost>("CreatePost");
-
-PostRef.implement({
+export const Post = builder.objectRef<IPost>("Post").implement({
   fields: (t) => ({
     id: t.exposeInt("id"),
     title: t.exposeString("title"),
@@ -16,13 +13,13 @@ PostRef.implement({
     createdAt: t.exposeString("createdAt"),
     updatedAt: t.exposeString("updatedAt"),
     categories: t.field({
-      type: t.listRef(CategoryRef),
+      type: t.listRef(Category),
       resolve: async (parent) => {
         return parent.categories;
       },
     }),
     user: t.field({
-      type: UserRef,
+      type: User,
       resolve: async (parent) => {
         return parent.user;
       },
@@ -30,7 +27,7 @@ PostRef.implement({
   }),
 });
 
-CreatePostInputRef.implement({
+export const CreatePostInput = builder.inputType("CreatePost", {
   fields: (t) => ({
     title: t.string({ required: true }),
     content: t.string({ required: true }),
@@ -40,3 +37,5 @@ CreatePostInputRef.implement({
     description: t.string({ required: true }),
   }),
 });
+
+export type ICreatePostInput = typeof CreatePostInput.$inferInput;

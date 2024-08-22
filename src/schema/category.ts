@@ -1,11 +1,7 @@
 import { builder } from "../builder";
-import { ICategory, ICreateCategory } from "../types";
+import { ICategory } from "../types";
 
-export const CategoryRef = builder.objectRef<ICategory>("Category");
-export const CreateCategoryInputRef =
-  builder.inputRef<ICreateCategory>("CreateCategory");
-
-CategoryRef.implement({
+export const Category = builder.objectRef<ICategory>("Category").implement({
   fields: (t) => ({
     id: t.exposeInt("id"),
     name: t.exposeString("name"),
@@ -15,9 +11,11 @@ CategoryRef.implement({
   }),
 });
 
-CreateCategoryInputRef.implement({
+export const CreateCategoryInput = builder.inputType("CreateCategory", {
   fields: (t) => ({
     name: t.string({ required: true }),
     description: t.string(),
   }),
 });
+
+export type ICreateCategoryInput = typeof CreateCategoryInput.$inferInput;

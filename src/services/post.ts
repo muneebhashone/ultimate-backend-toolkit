@@ -9,9 +9,9 @@ import {
 } from "../models/drizzle/schema";
 import { ICategory } from "../types";
 import { IPost } from "../types/models/post";
-import { ICreatePost } from "../types/services/post";
+import { ICreatePostInput } from "../schema";
 
-export const createPost = async (payload: ICreatePost): Promise<IPost> => {
+export const createPost = async (payload: ICreatePostInput): Promise<IPost> => {
   const insertedPost = await db
     .insert(posts)
     .values(payload)

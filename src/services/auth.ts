@@ -1,10 +1,11 @@
-import { LoginUser, LoginUserReturn } from "../types";
+import { ILoginUserInput } from "../schema";
+import { ILoginUserReturn } from "../types";
 import { signJwt, verifyPassword } from "../utils/security";
 import { findUserByEmail } from "./user";
 
 export const loginUser = async (
-  payload: LoginUser
-): Promise<LoginUserReturn> => {
+  payload: ILoginUserInput
+): Promise<ILoginUserReturn> => {
   const user = await findUserByEmail(payload.email);
 
   if (!user) {

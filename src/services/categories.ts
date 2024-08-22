@@ -1,9 +1,10 @@
 import { db } from "../lib/drizzle";
 import { categories } from "../models/drizzle/schema";
-import { ICategory, ICreateCategory } from "../types";
+import { ICreateCategoryInput } from "../schema";
+import { ICategory } from "../types";
 
 export const createCategory = async (
-  payload: ICreateCategory
+  payload: ICreateCategoryInput
 ): Promise<ICategory> => {
   const category = await db
     .insert(categories)
