@@ -1,5 +1,5 @@
 import { db } from "../lib/drizzle";
-import { categories } from "../models/drizzle";
+import { categories } from "../models/drizzle/schema";
 import { ICategory, ICreateCategory } from "../types";
 
 export const createCategory = async (

@@ -1,7 +1,13 @@
-import { sql } from "drizzle-orm";
+import { asc, eq, getTableColumns, sql } from "drizzle-orm";
 import app from "../core/app";
 import { db } from "../lib/drizzle";
-import { categories, categoriesPosts, posts, users } from "../models/drizzle";
+import {
+  categories,
+  categoriesPosts,
+  posts,
+  users,
+} from "../models/drizzle/schema";
+import { ICategory } from "../types";
 import { IPost } from "../types/models/post";
 import { ICreatePost } from "../types/services/post";
 
@@ -47,25 +53,22 @@ export const createPost = async (payload: ICreatePost): Promise<IPost> => {
 };
 
 export const fetchPosts = async (): Promise<IPost[]> => {
-  const postsAll = (await db.execute(sql`
-      SELECT 
-          ${posts.createdAt} as "createdAt", 
-          ${posts.updatedAt} as "updatedAt", 
-          ${posts.id} as id, 
-          ${posts.title} as title, 
-          ${posts.description} as description, 
-          ${posts.status} as status, 
-          ${posts.content} as content, 
-          json_build_object('username', ${users.username}, 'id',  ${users.id}, 'updatedAt',  ${users.updatedAt}, 'createdAt',  ${users.createdAt}, 'email',  ${users.email}) as user,
-          json_agg(json_build_object('name', ${categories.name}, 'id',  ${categories.id}, 'updatedAt',  ${categories.updatedAt}, 'createdAt', ${categories.createdAt}, 'description', ${categories.description})) AS ${categories}
-      FROM ${posts}
-      LEFT JOIN ${users} ON ${posts.userId} = ${users.id}
-      LEFT JOIN ${categoriesPosts} ON ${posts.id} = ${categoriesPosts.postId}
-      LEFT JOIN ${categories} ON ${categoriesPosts.categoryId} = ${categories.id}
-      GROUP BY ${posts.id}, ${users.id}, ${users.username}
-      LIMIT 10
-      OFFSET 0
-  `)) as unknown as IPost[];
+  const postsFetched = await db
+    .select({
+      ...getTableColumns(posts),
+      categories: sql<
+        ICategory[]
+      >`json_agg(json_build_object('name', ${categories.name}, 'id', ${categories.id}, 'updatedAt', ${categories.updatedAt}, 'createdAt', ${categories.createdAt}, 'description', ${categories.description}))`,
+      user: users,
+    })
+    .from(posts)
+    .leftJoin(users, eq(users.id, posts.userId))
+    .leftJoin(categoriesPosts, eq(posts.id, categoriesPosts.postId))
+    .leftJoin(categories, eq(categoriesPosts.categoryId, categories.id))
+    .groupBy(posts.id, users.id, users.username)
+    .orderBy(asc(posts.id))
+    .limit(10)
+    .offset(0);
 
-  return postsAll;
+  return postsFetched as IPost[];
 };

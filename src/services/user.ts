@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "../lib/drizzle";
-import { users } from "../models/drizzle";
+import { users } from "../models/drizzle/schema";
 import { ICreateUser, IUser } from "../types";
 import { hashPassword } from "../utils/security";
 
