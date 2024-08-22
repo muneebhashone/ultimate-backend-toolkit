@@ -1,6 +1,10 @@
 import { db } from "../lib/drizzle";
 import { categories } from "../models/drizzle/schema";
-import { ICategory, ICreateCategoryInput } from "../schema";
+import {
+  ICategory,
+  ICreateCategoryBulkInput,
+  ICreateCategoryInput,
+} from "../schema";
 
 export const createCategory = async (
   payload: ICreateCategoryInput
@@ -12,6 +16,18 @@ export const createCategory = async (
     .execute();
 
   return category[0];
+};
+
+export const createCategoryBulk = async (
+  payload: ICreateCategoryBulkInput
+): Promise<ICategory[]> => {
+  const categoriesAdded = await db
+    .insert(categories)
+    .values(payload.categories)
+    .returning()
+    .execute();
+
+  return categoriesAdded;
 };
 
 export const fetchCategories = async (): Promise<ICategory[]> => {

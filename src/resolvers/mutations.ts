@@ -1,6 +1,7 @@
 import { builder } from "../builder";
 import {
   Category,
+  CreateCategoryBulkInput,
   CreateCategoryInput,
   CreatePostInput,
   CreateUserInput,
@@ -10,7 +11,7 @@ import {
   User,
 } from "../schema";
 import { loginUser } from "../services/auth";
-import { createCategory } from "../services/categories";
+import { createCategory, createCategoryBulk } from "../services/categories";
 import { createPost } from "../services/post";
 import { createUser } from "../services/user";
 import { wrapResolver } from "../utils/graphqlUtil";
@@ -49,6 +50,19 @@ builder.mutationField("createCategory", (t) =>
     },
     resolve: wrapResolver(async (_, { input }) => {
       const category = await createCategory(input);
+      return category;
+    }),
+  })
+);
+
+builder.mutationField("createCategoryBulk", (t) =>
+  t.field({
+    type: t.listRef(Category),
+    args: {
+      input: t.arg({ type: CreateCategoryBulkInput, required: true }),
+    },
+    resolve: wrapResolver(async (_, { input }) => {
+      const category = await createCategoryBulk(input);
       return category;
     }),
   })

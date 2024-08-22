@@ -31,23 +31,22 @@ export const createPost = async (payload: ICreatePostInput): Promise<IPost> => {
 
   await Promise.all(categoriesPostInsertPromises);
 
-  const post = (
-    await db.execute(sql`
-      SELECT 
-          ${posts}.*, 
-          json_build_object('username', ${users.username}, 'id',  ${users.id}) as user,
-          json_agg(json_build_object('name', ${categories.name}, 'id',  ${categories.id}, 'updatedAt',  ${categories.updatedAt}, 'createdAt', ${categories.createdAt}, 'description', ${categories.description})) AS ${categories}
-      FROM ${posts}
-      LEFT JOIN ${users} ON ${posts.userId} = ${users.id}
-      LEFT JOIN ${categoriesPosts} ON ${posts.id} = ${categoriesPosts.postId}
-      LEFT JOIN ${categories} ON ${categoriesPosts.categoryId} = ${categories.id}
-      WHERE ${posts.id} = ${postId}
-      GROUP BY ${posts.id}, ${users.id}, ${users.username}
-      LIMIT 1;
-  `)
-  )[0] as unknown as IPost;
+  const post = await db
+    .select({
+      ...getTableColumns(posts),
+      categories: sql<
+        ICategory[]
+      >`json_agg(json_build_object('name', ${categories.name}, 'id', ${categories.id}, 'updatedAt', ${categories.updatedAt}, 'createdAt', ${categories.createdAt}, 'description', ${categories.description}))`,
+      user: users,
+    })
+    .from(posts)
+    .leftJoin(users, eq(users.id, posts.userId))
+    .leftJoin(categoriesPosts, eq(posts.id, categoriesPosts.postId))
+    .leftJoin(categories, eq(categoriesPosts.categoryId, categories.id))
+    .groupBy(posts.id, users.id, users.username)
+    .where(eq(posts.id, postId));
 
-  return post;
+  return post[0] as IPost;
 };
 
 export const fetchPosts = async (): Promise<IPost[]> => {

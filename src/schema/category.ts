@@ -21,4 +21,15 @@ export const CreateCategoryInput = builder.inputType("CreateCategory", {
   }),
 });
 
+export const CreateCategoryBulkInput = builder.inputType("CreateCategoryBulk", {
+  fields: (t) => ({
+    categories: t.field({
+      type: t.listRef(CreateCategoryInput),
+      required: true,
+    }),
+  }),
+});
+
 export type ICreateCategoryInput = typeof CreateCategoryInput.$inferInput;
+export type ICreateCategoryBulkInput =
+  typeof CreateCategoryBulkInput.$inferInput;
